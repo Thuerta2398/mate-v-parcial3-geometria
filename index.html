@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geo Quest · Parcial 3</title>
+<meta name="description" content="Repaso interactivo de ángulos internos, Teorema de Tales y Teorema de Pitágoras · Matemáticas V">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#121829; --bg2:#0c1120; --panel:#1d2540; --panel2:#262f50; --line:#3a4570;
+  --tx:#eef1ff; --mut:#a9b1d6; --y:#ffd23f; --g:#3ddc97; --c:#4cc9f0; --r:#ff5d73; --p:#b388ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{background:#0c1120}
+body{background:radial-gradient(circle at 20% 0%,#1d2a52 0,var(--bg) 45%,var(--bg2) 100%) fixed;color:var(--tx);font-family:Nunito,system-ui,sans-serif;font-size:17px;line-height:1.5;min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 60px}
+.px{font-family:"Press Start 2P",monospace;letter-spacing:.5px}
+h1.px{font-size:clamp(20px,5.5vw,34px);line-height:1.35;margin:18px 0 6px;color:var(--y);text-shadow:3px 3px 0 #b5332e}
+.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--panel);border:3px solid var(--line);border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 6px 0 #0a0e1b}
+.worlds{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.world{border-radius:10px;padding:10px 12px;background:var(--panel2);border-left:6px solid var(--wc)}
+.world b{display:block;font-size:14px}
+.world span{color:var(--mut);font-size:14px}
+ul.rules{padding-left:20px;margin:8px 0}
+ul.rules li{margin:4px 0}
+label.f{display:block;font-weight:700;margin:12px 0 4px}
+input.t{width:100%;padding:12px;border-radius:10px;border:2px solid var(--line);background:#0f1530;color:var(--tx);font:inherit}
+input.t:focus{outline:none;border-color:var(--y)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:900;border:0;border-radius:10px;padding:12px 18px;cursor:pointer;background:var(--y);color:#1a1300;box-shadow:0 4px 0 #a5800f;transition:transform .05s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a5800f}
+.btn.sec{background:var(--panel2);color:var(--tx);box-shadow:0 4px 0 #0a0e1b;border:2px solid var(--line)}
+.btn.go{background:var(--g);box-shadow:0 4px 0 #1d8a5c;color:#03210f}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+/* HUD */
+.hud{position:sticky;top:0;z-index:5;background:rgba(12,17,32,.92);backdrop-filter:blur(6px);border-bottom:3px solid var(--line);margin:0 -16px;padding:10px 16px}
+.hudtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.hearts{font-size:22px;letter-spacing:2px}
+.heart.off{filter:grayscale(1);opacity:.3}
+.xp{font-size:11px;color:var(--y)}
+.lvl{font-size:11px;color:var(--mut)}
+.nodes{display:flex;gap:4px;margin-top:8px}
+.node{flex:1;height:10px;border-radius:3px;background:#2a3358;position:relative}
+.node.done{background:var(--nc)}
+.node.cur{background:var(--tx);animation:pulse 1s infinite alternate}
+@keyframes pulse{from{opacity:.4}to{opacity:1}}
+/* Reto */
+.tag{display:inline-block;font-size:10px;padding:6px 8px;border-radius:6px;background:var(--wc);color:#0b0f1d;margin-bottom:10px}
+h2.rt{font-size:clamp(14px,3.8vw,18px);line-height:1.5;margin:4px 0 10px}
+.ctx{margin:0 0 10px}
+svg.fig{width:100%;max-width:440px;display:block;margin:6px auto 4px;background:#141b36;border-radius:10px;border:2px solid var(--line)}
+.ln{stroke:#dfe4ff;stroke-width:2.5;fill:none}
+.ln2{stroke:#7f8ab8;stroke-width:2;fill:none}
+.par{stroke:var(--c);stroke-width:3}
+.ray{stroke:#ffb347;stroke-width:1.6;stroke-dasharray:5 4}
+.tri{fill:rgba(76,201,240,.12);stroke:#dfe4ff;stroke-width:2.5}
+.qline{stroke:var(--y);stroke-width:3;stroke-dasharray:7 5;fill:none}
+.arc{stroke:#dfe4ff;stroke-width:1.8;fill:none}
+.arc.q{stroke:var(--y)}
+.lb{fill:#eef1ff;font:700 14px Nunito,sans-serif}
+.lb.q{fill:var(--y);font-weight:900}
+.lb.s{font-size:12px;fill:var(--mut)}
+.phase{border-top:2px dashed var(--line);margin-top:14px;padding-top:12px}
+.phase:first-of-type{border-top:0;margin-top:6px;padding-top:0}
+.phase.locked{opacity:.6;pointer-events:none}
+.q{font-weight:700;margin:0 0 8px}
+.ok-badge{color:var(--g);font-weight:900}
+.numrow{display:flex;flex-wrap:wrap;gap:12px}
+.numf{flex:1 1 180px}
+.numf .in{display:flex;align-items:center;gap:6px}
+.numf .in input{flex:1}
+.unit{color:var(--mut);font-weight:700}
+.ej{font-size:14px;color:var(--mut);margin-top:6px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;font:inherit;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--panel2);color:var(--tx);cursor:pointer}
+.opt.sel{border-color:var(--y);background:#3b3720}
+.vfrow{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
+.vfrow p{margin:0;flex:1}
+.vfb{display:flex;gap:6px}
+.vfb button{font:900 15px Nunito;width:46px;height:42px;border-radius:8px;border:2px solid var(--line);background:var(--panel2);color:var(--tx);cursor:pointer}
+.vfb button.sel{background:var(--y);color:#1a1300;border-color:var(--y)}
+.timer{height:12px;border-radius:6px;background:#2a3358;overflow:hidden;margin:6px 0 4px}
+.timer i{display:block;height:100%;background:var(--g);transition:width .25s linear}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.chip{font:900 16px Nunito;padding:10px 16px;border-radius:999px;border:2px solid var(--c);background:#16324a;color:var(--tx);cursor:grab;user-select:none;touch-action:manipulation}
+.chip.sel{background:var(--c);color:#04202c}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.slot{border:2px dashed var(--mut);border-radius:10px;padding:10px;min-height:66px;cursor:pointer}
+.slot small{display:block;color:var(--mut);font-size:13px}
+.slot .v{font:900 20px Nunito;color:var(--y)}
+.slot.over{border-color:var(--y);background:#2c2a1a}
+.ordpool,.ordlist{display:grid;gap:8px}
+.ordlist{counter-reset:o;margin:10px 0}
+.ordlist div{background:#173a2c;border:2px solid var(--g);border-radius:10px;padding:10px 12px}
+.ordlist div::before{counter-increment:o;content:counter(o) ". ";font-weight:900;color:var(--g)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.fb{margin-top:12px;border-radius:10px;padding:12px 14px;display:none}
+.fb.show{display:block}
+.fb.ok{background:#123829;border:2px solid var(--g)}
+.fb.no{background:#3d1622;border:2px solid var(--r)}
+.fb.info{background:#14304a;border:2px solid var(--c)}
+.hint{display:none;margin-top:10px;background:#2f2a14;border:2px solid var(--y);border-radius:10px;padding:10px 14px}
+.hint.show{display:block}
+.shake{animation:sh .35s}
+@keyframes sh{0%,100%{transform:none}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.toast{position:fixed;left:50%;top:84px;transform:translateX(-50%);background:var(--panel2);border:3px solid var(--y);border-radius:12px;padding:12px 18px;z-index:20;font-weight:900;box-shadow:0 8px 24px rgba(0,0,0,.5);max-width:92vw;text-align:center;display:none}
+.toast.show{display:block}
+.modal{position:fixed;inset:0;background:rgba(5,8,18,.82);z-index:30;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.modal .card{max-width:440px;text-align:center}
+.big{font-size:clamp(28px,8vw,44px);color:var(--y)}
+table.res{width:100%;border-collapse:collapse;font-size:15px}
+table.res th,table.res td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
+table.res td.n{text-align:right}
+img.prev{width:100%;border-radius:10px;border:2px solid var(--line);margin-top:10px}
+.small{font-size:14px;color:var(--mut)}
+@media (max-width:420px){.card{padding:14px}.hearts{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="card" id="modalc"></div></div>
+
+<script>
+/* =========================================================
+   GEO QUEST · Repaso Parcial 3 · Matemáticas V
+   Ángulos internos · Teorema de Tales · Teorema de Pitágoras
+   ========================================================= */
+const KEY = 'geoquest-m5-p3-v1';
+const BASE = 100, PEN_WRONG = 30, PEN_HINT = 20, MIN_PTS = 30;
+
+const MUNDOS = [
+  {n:'Mundo 1 · Bloques',      tema:'Ángulos internos',     c:'#3ddc97'},
+  {n:'Mundo 2 · Sombras',      tema:'Teorema de Tales',     c:'#4cc9f0'},
+  {n:'Mundo 3 · Mapa abierto', tema:'Teorema de Pitágoras', c:'#ffd23f'},
+  {n:'Jefe final',             tema:'Integrador',           c:'#ff5d73'}
+];
+
+/* ---------- utilidades SVG ---------- */
+const P=(x,y)=>({x,y});
+const R2=v=>Math.round(v*10)/10;
+const svg=(inner,w=340,h=230)=>`<svg viewBox="0 0 ${w} ${h}" class="fig" role="img" aria-label="Figura del reto">${inner}</svg>`;
+const L=(a,b,c='ln')=>`<line x1="${R2(a.x)}" y1="${R2(a.y)}" x2="${R2(b.x)}" y2="${R2(b.y)}" class="${c}"/>`;
+const POLY=(pts,c='tri')=>`<polygon points="${pts.map(p=>R2(p.x)+','+R2(p.y)).join(' ')}" class="${c}"/>`;
+const T=(x,y,s,c='lb',a='middle')=>`<text x="${R2(x)}" y="${R2(y)}" class="${c}" text-anchor="${a}">${s}</text>`;
+function triA(a,b,len,ox,oy){const r=Math.PI/180,ac=len*Math.sin(b*r)/Math.sin((a+b)*r);return[P(ox,oy),P(ox+len,oy),P(ox+ac*Math.cos(a*r),oy-ac*Math.sin(a*r))];}
+function arc(v,p1,p2,r,label,q){
+  const a1=Math.atan2(p1.y-v.y,p1.x-v.x),a2=Math.atan2(p2.y-v.y,p2.x-v.x);
+  let d=a2-a1;while(d<=-Math.PI)d+=2*Math.PI;while(d>Math.PI)d-=2*Math.PI;
+  const s=P(v.x+r*Math.cos(a1),v.y+r*Math.sin(a1)),e=P(v.x+r*Math.cos(a1+d),v.y+r*Math.sin(a1+d)),m=a1+d/2,lr=r+17;
+  return `<path d="M${R2(s.x)},${R2(s.y)} A${r},${r} 0 0 ${d>0?1:0} ${R2(e.x)},${R2(e.y)}" class="arc${q?' q':''}"/>`+T(v.x+lr*Math.cos(m),v.y+lr*Math.sin(m)+5,label,q?'lb q':'lb');
+}
+function rmark(v,p1,p2,s=12){
+  const u=(p)=>{const dx=p.x-v.x,dy=p.y-v.y,n=Math.hypot(dx,dy);return P(dx/n,dy/n)};
+  const a=u(p1),b=u(p2);
+  return `<polyline points="${R2(v.x+s*a.x)},${R2(v.y+s*a.y)} ${R2(v.x+s*a.x+s*b.x)},${R2(v.y+s*a.y+s*b.y)} ${R2(v.x+s*b.x)},${R2(v.y+s*b.y)}" class="ln2"/>`;
+}
+function seg(a,b,s,off=16,q){ // etiqueta en el punto medio, desplazada perpendicularmente
+  const mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=b.x-a.x,dy=b.y-a.y,n=Math.hypot(dx,dy);
+  return T(mx+off*(-dy/n),my+off*(dx/n)+5,s,q?'lb q':'lb');
+}
+const xAt=(p,q,y)=>p.x+(q.x-p.x)*(y-p.y)/(q.y-p.y);
+function parallels(ys,tl,tr,labs,shelf){
+  // ys: 3 alturas; tl/tr: transversales [p,q]; labs: [izq1,izq2,der1,der2] (con {q:true} para incógnita)
+  let s='';
+  ys.forEach((y,i)=>{ s+= shelf? `<rect x="20" y="${y-4}" width="300" height="8" rx="2" fill="#4cc9f0" opacity=".85"/>` : `<line x1="12" y1="${y}" x2="328" y2="${y}" class="ln par"/>`+T(330,y-6,'L'+(i+1),'lb s','end'); });
+  s+=L(tl[0],tl[1])+L(tr[0],tr[1]);
+  const pl=ys.map(y=>P(xAt(tl[0],tl[1],y),y)), pr=ys.map(y=>P(xAt(tr[0],tr[1],y),y));
+  [...pl,...pr].forEach(p=>s+=`<circle cx="${R2(p.x)}" cy="${R2(p.y)}" r="3.5" fill="#fff"/>`);
+  const lab=(o)=>typeof o==='string'?[o,false]:[o.t,true];
+  let [a,qa]=lab(labs[0]);s+=seg(pl[0],pl[1],a,-20,qa);
+  [a,qa]=lab(labs[1]);s+=seg(pl[1],pl[2],a,-20,qa);
+  [a,qa]=lab(labs[2]);s+=seg(pr[0],pr[1],a,22,qa);
+  [a,qa]=lab(labs[3]);s+=seg(pr[1],pr[2],a,22,qa);
+  return s;
+}
+
+/* ---------- figuras de cada reto ---------- */
+const FIG={
+  r1(){const[A,B,C]=triA(52,73,200,50,200);
+    return svg(`<rect x="30" y="200" width="240" height="14" fill="#5b3f8c"/><rect x="30" y="214" width="240" height="8" fill="#3a2860"/>`+POLY([A,B,C])+arc(A,B,C,26,'52°')+arc(B,C,A,26,'73°')+arc(C,A,B,22,'?',true));},
+  r2(){const[A,B,C]=triA(35,35,240,50,165);
+    let blocks='';for(let x=70;x<270;x+=25)for(let y=165;y<225;y+=20)blocks+=`<rect x="${x}" y="${y}" width="25" height="20" fill="${(x/25+y/20)%2<1?'#8b5a2b':'#a0692f'}" stroke="#5c3a19"/>`;
+    return svg(blocks+`<rect x="150" y="190" width="30" height="35" fill="#3b2a14"/>`+POLY([A,B,C],'tri')+arc(A,B,C,30,'?',true)+arc(B,C,A,30,'?',true)+arc(C,A,B,20,'110°'));},
+  r4(){const[A,B,C]=triA(30,60,250,40,195);
+    return svg(`<path d="M20 205 H320" stroke="#666e94" stroke-width="10" stroke-dasharray="18 12"/>`+POLY([A,B,C])+arc(A,B,C,34,'x',true)+arc(B,C,A,26,'2x',true)+arc(C,A,B,18,'3x',true));},
+  r5(){const g=200;
+    const av=`<rect x="34" y="${g-50}" width="16" height="16" fill="#e0b48a"/><rect x="32" y="${g-34}" width="20" height="20" fill="#2bb3a3"/><rect x="34" y="${g-14}" width="7" height="14" fill="#334"/><rect x="43" y="${g-14}" width="7" height="14" fill="#334"/>`;
+    const tw=`<rect x="160" y="${g-150}" width="22" height="150" fill="#d9d9e8"/><rect x="160" y="${g-110}" width="22" height="16" fill="#ff5d73"/><rect x="160" y="${g-60}" width="22" height="16" fill="#ff5d73"/><rect x="154" y="${g-162}" width="34" height="14" fill="#ffd23f"/>`;
+    return svg(`<circle cx="320" cy="28" r="16" fill="#ffd23f"/><rect x="0" y="${g}" width="380" height="30" fill="#2f6b3a"/>`+av+tw+
+      `<line x1="42" y1="${g-50}" x2="104" y2="${g}" class="ray"/><line x1="171" y1="${g-162}" x2="371" y2="${g}" class="ray"/>`+
+      `<line x1="42" y1="${g}" x2="104" y2="${g}" stroke="#111" stroke-width="6" opacity=".55"/><line x1="171" y1="${g}" x2="371" y2="${g}" stroke="#111" stroke-width="6" opacity=".55"/>`+
+      T(18,g-22,'1.6 m')+T(73,g+20,'2 m')+T(271,g+20,'15 m')+T(214,g-70,'h = ?','lb q','start'),380,230);},
+  r6(){return svg(parallels([40,110,215],[P(70,15),P(130,228)],[P(220,15),P(310,228)],['6','9','10',{t:'x'}]));},
+  r7(){const A=P(170,25),B=P(40,215),C=P(310,215),D=P(118,101),E=P(226,101);
+    return svg(POLY([A,B,C])+L(D,E,'ln par')+[A,B,C,D,E].map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="#fff"/>`).join('')+
+      T(170,17,'A')+T(30,228,'B')+T(318,228,'C')+T(104,98,'D')+T(240,98,'E')+
+      seg(A,D,'4',-18)+seg(D,B,'6',-18)+seg(A,E,'5',18)+seg(E,C,'?',18,true)+T(172,94,'pasarela','lb s'),340,240);},
+  r8(){return svg(parallels([35,140,210],[P(60,12),P(120,228)],[P(210,12),P(300,228)],[{t:'x + 2'},{t:'x'},'9','6']));},
+  r9(){return svg(`<rect x="14" y="20" width="312" height="200" fill="#3a2a18" opacity=".35"/>`+parallels([40,100,190],[P(70,20),P(40,220)],[P(250,20),P(300,220)],['4','6','6',{t:'x'}],true));},
+  r10(){const a=P(40,30),b=P(280,30),c=P(280,210),d=P(40,210);
+    return svg(`<rect x="22" y="14" width="276" height="212" rx="18" fill="#2d2d3a"/><rect x="40" y="30" width="240" height="180" fill="#1f4f7a"/>`+L(d,b,'qline')+
+      T(160,222,'16 cm')+T(300,125,'12 cm','lb','start')+T(150,112,'d = ?','lb q'),340,240);},
+  r11(){const B=P(130,210),W=P(250,210),H=P(250,50);
+    let rungs='';for(let i=1;i<8;i++){const t=i/8;rungs+=L(P(B.x+(H.x-B.x)*t-6,B.y+(H.y-B.y)*t-4),P(B.x+(H.x-B.x)*t+6,B.y+(H.y-B.y)*t+4),'ln2');}
+    return svg(`<rect x="250" y="20" width="70" height="190" fill="#7a6a55"/><rect x="20" y="210" width="300" height="20" fill="#3f8f4f"/>`+L(B,H,'ln')+rungs+L(H,W,'qline')+rmark(W,B,H)+
+      T(190,228,'6 m')+seg(B,H,'10 m',-18)+T(262,135,'h = ?','lb q','start'));},
+  r13(){let g='';for(let x=10;x<=250;x+=12)g+=`<line x1="${x}" y1="10" x2="${x}" y2="210" stroke="#2c3866"/>`;for(let y=10;y<=210;y+=12)g+=`<line x1="10" y1="${y}" x2="250" y2="${y}" stroke="#2c3866"/>`;
+    const s=P(22,190),a=P(130,190),b=P(130,46),e=P(214,46);
+    return svg(g+`<polyline points="${s.x},${s.y} ${a.x},${a.y} ${b.x},${b.y} ${e.x},${e.y}" fill="none" stroke="#4cc9f0" stroke-width="4"/>`+L(s,e,'qline')+
+      `<circle cx="${s.x}" cy="${s.y}" r="6" fill="#3ddc97"/><circle cx="${e.x}" cy="${e.y}" r="6" fill="#ff5d73"/>`+
+      T(76,206,'9 m al este')+T(136,122,'12 m','lb','start')+T(172,38,'7 m')+T(60,110,'d = ?','lb q')+T(22,178,'inicio','lb s')+T(234,62,'meta','lb s'),260,220);},
+  r14(){const D=P(50,50),G=P(50,200),O=P(250,200);
+    const drone=`<rect x="36" y="44" width="28" height="12" rx="3" fill="#cfd6ff"/><circle cx="32" cy="42" r="7" fill="none" stroke="#cfd6ff" stroke-width="2"/><circle cx="68" cy="42" r="7" fill="none" stroke="#cfd6ff" stroke-width="2"/><circle cx="50" cy="60" r="3" fill="#ff5d73"/>`;
+    return svg(`<rect x="0" y="200" width="340" height="30" fill="#2f6b3a"/>`+L(D,G,'ln')+L(G,O,'ln')+L(D,O,'qline')+rmark(G,D,O)+drone+
+      `<polygon points="250,200 240,180 260,180" fill="#ffd23f"/>`+T(250,174,'objetivo','lb s')+
+      T(36,130,'30 m','lb','end')+T(150,218,'40 m')+T(160,112,'d = ?','lb q'));},
+  r15(){const Tp=P(250,50),Bs=P(250,200),Gd=P(50,200);
+    return svg(`<rect x="0" y="200" width="400" height="30" fill="#3b3150"/>`+
+      `<rect x="238" y="50" width="24" height="150" fill="#6d5a8c"/><rect x="232" y="38" width="36" height="14" fill="#8a73b0"/>`+
+      `<line x1="250" y1="200" x2="362" y2="200" stroke="#000" stroke-width="7" opacity=".5"/>`+T(306,218,'sombra 4.5 m')+
+      L(Tp,Gd,'qline')+arc(Gd,Bs,Tp,34,'37°')+arc(Tp,Gd,Bs,30,'β = ?',true)+rmark(Bs,Tp,Gd)+
+      T(150,218,'8 m')+T(272,130,'h = ?','lb q','start')+seg(Gd,Tp,'L = ?',-16,true)+
+      `<rect x="16" y="16" width="96" height="74" rx="8" fill="#1d2540" stroke="#3a4570"/><line x1="40" y1="30" x2="40" y2="70" stroke="#dfe4ff" stroke-width="4"/><line x1="40" y1="70" x2="70" y2="70" stroke="#000" stroke-width="5" opacity=".6"/>`+
+      T(48,48,'2 m','lb s','start')+T(56,84,'1.5 m','lb s'),400,230);}
+};
+
+/* ---------- tipos de fase ---------- */
+function parseNum(s){ if(s==null)return NaN; s=String(s).trim().replace(',', '.'); const m=s.match(/-?\d+(\.\d+)?/); return m?parseFloat(m[0]):NaN; }
+const el=(h)=>{const d=document.createElement('div');d.innerHTML=h;return d;};
+
+function NUM(o){ // o.q, o.fields:[{l,a,u,ej}]
+  return {q:o.q, mount(box){
+    box.innerHTML=`<div class="numrow">${o.fields.map((f,i)=>`<div class="numf"><label class="f" for="n${i}">${f.l}</label><div class="in"><input class="t" id="n${i}" inputmode="decimal" autocomplete="off" placeholder="ej. ${f.ej}">${f.u?`<span class="unit">${f.u}</span>`:''}</div></div>`).join('')}</div><div class="ej">Escribe solo el número, sin unidades. Si lleva decimales usa punto, por ejemplo <b>7.5</b>.</div>`;
+    this.ins=[...box.querySelectorAll('input')];
+    this.ins.forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('bCheck')?.click();}));
+  },
+  read(){ const v=this.ins.map(i=>i.value.trim()); if(v.some(x=>x===''))return {err:'Completa todas las respuestas.'};
+    const n=v.map(parseNum); if(n.some(isNaN))return {err:'Escribe solo números, por ejemplo '+o.fields[0].ej+'.'}; return {v:n}; },
+  check(v){ return v.every((x,i)=>Math.abs(x-o.fields[i].a)<0.011); },
+  show(v){ return v.map((x,i)=>x+(o.fields[i].u?' '+o.fields[i].u:'')).join(' · '); }
+  };
+}
+function MCQ(o){ // o.q, o.opts:[{t,ok}]
+  return {q:o.q, mount(box){
+    box.innerHTML=`<div class="opts">${o.opts.map((p,i)=>`<button class="opt" data-i="${i}">${p.t}</button>`).join('')}</div>`;
+    this.sel=null; box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{box.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');this.sel=+b.dataset.i;});
+  },
+  read(){ return this.sel==null?{err:'Elige una opción.'}:{v:this.sel}; },
+  check(v){ return !!o.opts[v].ok; }, show(v){return o.opts[v].t.replace(/<[^>]+>/g,'');}
+  };
+}
+function MULTI(o){
+  return {q:o.q, mount(box){
+    box.innerHTML=`<div class="opts">${o.opts.map((p,i)=>`<button class="opt" data-i="${i}">☐ ${p.t}</button>`).join('')}</div>`;
+    this.s=new Set(); box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const i=+b.dataset.i; if(this.s.has(i)){this.s.delete(i);b.classList.remove('sel');b.innerHTML='☐ '+o.opts[i].t;}else{this.s.add(i);b.classList.add('sel');b.innerHTML='☑ '+o.opts[i].t;}});
+  },
+  read(){ return this.s.size?{v:[...this.s].sort()}:{err:'Selecciona al menos una opción.'}; },
+  check(v){ const ok=o.opts.map((p,i)=>p.ok?i:-1).filter(i=>i>=0); return v.length===ok.length&&v.every((x,i)=>x===ok[i]); },
+  show(v){return v.map(i=>o.opts[i].t).join(', ');}
+  };
+}
+function VF(o){ // o.items:[{t,a:true/false}], o.sec
+  return {q:o.q, timed:true, mount(box,ctx){
+    box.innerHTML=`<div class="timer"><i id="tbar" style="width:100%"></i></div><div class="small" id="tlab"></div>`+o.items.map((it,i)=>`<div class="vfrow"><p>${it.t}</p><div class="vfb" data-i="${i}"><button data-v="1">V</button><button data-v="0">F</button></div></div>`).join('');
+    this.ans=o.items.map(()=>null);
+    box.querySelectorAll('.vfb').forEach(g=>g.querySelectorAll('button').forEach(b=>b.onclick=()=>{g.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');this.ans[+g.dataset.i]=b.dataset.v==='1';}));
+    this.box=box; this.ctx=ctx; this.start();
+  },
+  start(){ clearInterval(this.iv); const t0=Date.now(),dur=o.sec*1000; this.ans=this.ans.map(()=>null); this.box.querySelectorAll('.vfb button').forEach(b=>b.classList.remove('sel'));
+    const tick=()=>{const left=Math.max(0,dur-(Date.now()-t0)); const bar=this.box.querySelector('#tbar'); if(!bar){clearInterval(this.iv);return;}
+      bar.style.width=(left/dur*100)+'%'; bar.style.background=left<10000?'#ff5d73':'#3ddc97'; this.box.querySelector('#tlab').textContent='Tiempo: '+Math.ceil(left/1000)+' s';
+      if(left<=0){clearInterval(this.iv); this.ctx.timeout(()=>this.start());}};
+    tick(); this.iv=setInterval(tick,250); },
+  stop(){clearInterval(this.iv);},
+  read(){ return this.ans.some(a=>a==null)?{err:'Responde todas las afirmaciones.'}:{v:this.ans.slice()}; },
+  check(v){ return v.every((x,i)=>x===o.items[i].a); }, show(v){return v.map(x=>x?'V':'F').join(' ');}
+  };
+}
+function DRAG(o){ // o.chips:[...], o.slots:[{l,a}]
+  return {q:o.q, mount(box){
+    box.innerHTML=`<div class="small">Toca una ficha y luego toca la casilla (o arrástrala).</div><div class="chips">${o.chips.map(c=>`<span class="chip" draggable="true" data-v="${c}">${c}</span>`).join('')}</div><div class="slots">${o.slots.map((s,i)=>`<div class="slot" data-i="${i}"><small>${s.l}</small><span class="v"></span></div>`).join('')}</div>`;
+    this.v=o.slots.map(()=>null); let pick=null;
+    const chips=box.querySelectorAll('.chip');
+    chips.forEach(c=>{c.onclick=()=>{chips.forEach(x=>x.classList.remove('sel'));c.classList.add('sel');pick=c.dataset.v;};
+      c.ondragstart=e=>{e.dataTransfer.setData('text/plain',c.dataset.v);};});
+    box.querySelectorAll('.slot').forEach(s=>{
+      const put=(val)=>{this.v[+s.dataset.i]=val;s.querySelector('.v').textContent=val;};
+      s.onclick=()=>{if(pick!=null){put(pick);}};
+      s.ondragover=e=>{e.preventDefault();s.classList.add('over');}; s.ondragleave=()=>s.classList.remove('over');
+      s.ondrop=e=>{e.preventDefault();s.classList.remove('over');put(e.dataTransfer.getData('text/plain'));};
+    });
+  },
+  read(){ return this.v.some(x=>x==null)?{err:'Llena todas las casillas.'}:{v:this.v.slice()}; },
+  check(v){ return v.every((x,i)=>String(x)===String(o.slots[i].a)); }, show(v){return v.join(' · ');}
+  };
+}
+function ORDER(o){ // o.steps (orden correcto), o.mix (índices en el orden que se muestran)
+  return {q:o.q, mount(box){
+    const draw=()=>{
+      box.innerHTML=`<div class="small">Toca los pasos en el orden correcto.</div><div class="ordlist">${this.seq.map(i=>`<div class="mono">${o.steps[i]}</div>`).join('')}</div>
+      <div class="ordpool">${o.mix.filter(i=>!this.seq.includes(i)).map(i=>`<button class="opt mono" data-i="${i}">${o.steps[i]}</button>`).join('')}</div>
+      <div class="row"><button class="btn sec" id="ordReset">↺ Reiniciar orden</button></div>`;
+      box.querySelectorAll('.ordpool .opt').forEach(b=>b.onclick=()=>{this.seq.push(+b.dataset.i);draw();});
+      box.querySelector('#ordReset').onclick=()=>{this.seq=[];draw();};
+    };
+    this.seq=[]; this.redraw=draw; draw();
+  },
+  read(){ return this.seq.length<o.steps.length?{err:'Coloca todos los pasos.'}:{v:this.seq.slice()}; },
+  check(v){ return v.every((x,i)=>x===i); }, reset(){this.seq=[];this.redraw();}, show(){return 'orden';}
+  };
+}
+function ERRLINE(o){ // o.lines, o.bad
+  return {q:o.q, mount(box){
+    box.innerHTML=`<div class="opts">${o.lines.map((t,i)=>`<button class="opt mono" data-i="${i}">${t}</button>`).join('')}</div>`;
+    this.sel=null; box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{box.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');this.sel=+b.dataset.i;});
+  },
+  read(){ return this.sel==null?{err:'Toca la línea que tiene el error.'}:{v:this.sel}; },
+  check(v){ return v===o.bad; }, show(v){return 'línea '+(v+1);}
+  };
+}
+
+/* ---------- los 15 retos ---------- */
+const RETOS=[
+ {m:0,t:'Plataforma triangular',fig:'r1',
+  ctx:'En un <b>obby de Roblox</b> hay una plataforma con forma de triángulo. Dos de sus ángulos miden 52° y 73°. ¿Cuánto mide el tercer ángulo?',
+  hint:'Los tres ángulos internos de cualquier triángulo suman 180°.',
+  sol:'180° − (52° + 73°) = 180° − 125° = <b>55°</b>',
+  ph:[NUM({fields:[{l:'Tercer ángulo',a:55,u:'°',ej:'55'}]})]},
+ {m:0,t:'Techo de bloques',fig:'r2',
+  ctx:'En <b>Minecraft</b> construyes el techo de una casa con forma de triángulo <b>isósceles</b>. El ángulo de la punta mide 110°. Coloca el valor correcto en cada ángulo de la base.',
+  hint:'En un triángulo isósceles los dos ángulos de la base son iguales: reparte entre dos lo que falta para llegar a 180°.',
+  sol:'180° − 110° = 70°; 70° ÷ 2 = <b>35°</b> cada ángulo de la base',
+  ph:[DRAG({chips:['55°','35°','70°','110°','145°'],slots:[{l:'Ángulo izquierdo de la base',a:'35°'},{l:'Ángulo derecho de la base',a:'35°'}]})]},
+ {m:0,t:'Speedrun de ángulos',
+  ctx:'<b>Contrarreloj:</b> tienes 45 segundos para decidir si cada afirmación es verdadera (V) o falsa (F). Si se acaba el tiempo, pierdes un corazón y el reloj vuelve a empezar.',
+  hint:'Todo triángulo suma 180°. Un ángulo obtuso mide más de 90°.',
+  sol:'F (dos obtusos ya suman más de 180°) · V (90° + 40° + 50° = 180°) · V (180° ÷ 3 = 60°) · F (90° + 60° + 40° = 190°)',
+  ph:[VF({sec:45,items:[
+    {t:'Un triángulo puede tener dos ángulos obtusos.',a:false},
+    {t:'Si un triángulo rectángulo tiene un ángulo de 40°, el otro ángulo agudo mide 50°.',a:true},
+    {t:'Cada ángulo de un triángulo equilátero mide 60°.',a:true},
+    {t:'Existe un triángulo con ángulos de 90°, 60° y 40°.',a:false}]})]},
+ {m:0,t:'Atajo en Mario Kart World',fig:'r4',
+  ctx:'Un atajo de la pista en <b>Mario Kart World</b> forma un triángulo cuyos ángulos miden <b>x</b>, <b>2x</b> y <b>3x</b>. ¿Cuánto mide cada ángulo?',
+  hint:'Suma los tres ángulos y escribe la ecuación: x + 2x + 3x = 180°. Despeja x.',
+  sol:'6x = 180° → x = 30°. Los ángulos son <b>30°, 60° y 90°</b>.',
+  ph:[MCQ({opts:[{t:'20°, 40° y 60°'},{t:'36°, 72° y 108°'},{t:'30°, 60° y 90°',ok:true},{t:'45°, 90° y 135°'}]})]},
+
+ {m:1,t:'El faro del bioma',fig:'r5',
+  ctx:'En <b>Minecraft</b>, tu avatar mide 1.6 m y su sombra mide 2 m. A la misma hora, un faro proyecta una sombra de 15 m. ¿Qué altura tiene el faro?',
+  hint:'Los rayos del sol son paralelos, así que altura ÷ sombra es igual en los dos triángulos: 1.6 / 2 = h / 15.',
+  sol:'h = 15 × 1.6 ÷ 2 = 24 ÷ 2 = <b>12 m</b>',
+  ph:[NUM({fields:[{l:'Altura del faro',a:12,u:'m',ej:'12'}]})]},
+ {m:1,t:'Carriles paralelos',fig:'r6',
+  ctx:'En un <b>obby de Roblox</b>, tres carriles paralelos (L1 ∥ L2 ∥ L3) son cortados por dos rampas. Primero elige la proporción correcta y después calcula x.',
+  hint:'Cada segmento de una rampa se compara con el segmento de la otra rampa que está entre las mismas paralelas.',
+  sol:'6/9 = 10/x → 6x = 90 → <b>x = 15</b>',
+  ph:[MCQ({q:'Fase 1 · ¿Qué proporción es correcta?',opts:[{t:'6/9 = x/10'},{t:'6/9 = 10/x',ok:true},{t:'6/10 = x/9'}]}),
+      NUM({q:'Fase 2 · Calcula x',fields:[{l:'x',a:15,u:'',ej:'15'}]})]},
+ {m:1,t:'Pasarela de Ciudad Lumiose',fig:'r7',
+  ctx:'En <b>Pokémon Legends Z‑A</b>, la pasarela DE de Ciudad Lumiose es paralela a la avenida BC. Si AD = 4, DB = 6 y AE = 5, ¿cuánto mide EC?',
+  hint:'Forma “A” del Teorema de Tales: AD / DB = AE / EC.',
+  sol:'4/6 = 5/EC → 4·EC = 30 → <b>EC = 7.5</b>',
+  ph:[NUM({fields:[{l:'EC',a:7.5,u:'',ej:'7.5'}]})]},
+ {m:1,t:'Orden de los saltos',fig:'r8',
+  ctx:'En un nivel de <b>Geometry Dash</b>, tres plataformas paralelas cortan dos rampas. Ordena los pasos para resolver la proporción.',
+  hint:'Primero se plantea, luego se multiplica en cruz, después se agrupan las x y al final se despeja.',
+  sol:'(x + 2)/x = 9/6 → 6(x + 2) = 9x → 6x + 12 = 9x → 12 = 3x → <b>x = 4</b>',
+  ph:[ORDER({steps:['(x + 2) / x = 9 / 6','6(x + 2) = 9x','6x + 12 = 9x','12 = 3x','x = 4'],mix:[2,4,0,3,1]})]},
+ {m:1,t:'Bug en la repisa',fig:'r9',
+  ctx:'Tu repisa de colección de videojuegos tiene entrepaños paralelos. Un compañero calculó x así, pero su solución tiene un <b>bug</b>.',
+  hint:'Compara cada segmento del lado izquierdo con el del lado derecho que queda entre los mismos entrepaños.',
+  sol:'Lo correcto es 4/6 = 6/x → 4x = 36 → <b>x = 9</b>',
+  ph:[ERRLINE({q:'Fase 1 · Toca la línea donde está el error',lines:['1. Los entrepaños son paralelos → aplico Tales','2. 4 / 6 = x / 6','3. 6x = 24','4. x = 4'],bad:1}),
+      NUM({q:'Fase 2 · Corrige el bug: ¿cuánto vale x?',fields:[{l:'x',a:9,u:'',ej:'9'}]})]},
+
+ {m:2,t:'Pantalla de la portátil',fig:'r10',
+  ctx:'La pantalla de tu consola portátil mide 16 cm de ancho y 12 cm de alto. ¿Cuánto mide su diagonal?',
+  hint:'La diagonal es la hipotenusa: c = √(a² + b²).',
+  sol:'√(16² + 12²) = √(256 + 144) = √400 = <b>20 cm</b>',
+  ph:[NUM({fields:[{l:'Diagonal',a:20,u:'cm',ej:'20'}]})]},
+ {m:2,t:'Escalera de la isla',fig:'r11',
+  ctx:'En tu isla de <b>Animal Crossing</b>, una escalera de 10 m se apoya en un acantilado y su base queda a 6 m. ¿A qué altura llega? Coloca la operación y el resultado.',
+  hint:'Buscas un cateto: el cuadrado del lado grande menos el cuadrado del chico.',
+  sol:'h = √(10² − 6²) = √(100 − 36) = √64 = <b>8 m</b>',
+  ph:[DRAG({chips:['Sumo','Resto','4','8','16'],slots:[{l:'¿Sumo o resto los cuadrados?',a:'Resto'},{l:'Altura (m)',a:'8'}]})]},
+ {m:2,t:'¿Marco en escuadra?',
+  ctx:'En <b>Minecraft</b> quieres marcos triangulares con un ángulo recto exacto. Selecciona <b>todas</b> las ternas de medidas que forman un triángulo rectángulo.',
+  hint:'Usa el recíproco: con c = el lado mayor, comprueba si a² + b² = c².',
+  sol:'64 + 225 = 289 = 17² ✓ · 25 + 144 = 169 = 13² ✓ · 36 + 49 = 85 ≠ 81 ✗ · 81 + 1600 = 1681 = 41² ✓',
+  ph:[MULTI({opts:[{t:'8, 15 y 17',ok:true},{t:'6, 7 y 9'},{t:'5, 12 y 13',ok:true},{t:'9, 40 y 41',ok:true}]})]},
+ {m:2,t:'Ruta en Stardew Valley',fig:'r13',
+  ctx:'En el mapa de <b>Stardew Valley</b> caminas 9 m al este, 12 m al norte y otros 7 m al este. ¿A qué distancia en línea recta quedaste del inicio?',
+  hint:'Junta todo lo que avanzaste al este en un solo cateto; lo que avanzaste al norte es el otro cateto.',
+  sol:'Este: 9 + 7 = 16 m; d = √(16² + 12²) = √(256 + 144) = √400 = <b>20 m</b>',
+  ph:[NUM({fields:[{l:'Total hacia el este',a:16,u:'m',ej:'16'},{l:'Distancia en línea recta',a:20,u:'m',ej:'20'}]})]},
+ {m:2,t:'Dron de fotos',fig:'r14',
+  ctx:'En el modo foto de un juego de exploración, tu dron de cámara vuela a 30 m de altura sobre ti. El punto que quieres fotografiar está a 40 m horizontales. La señal del dron alcanza 48 m.',
+  hint:'La distancia del dron al objetivo es la hipotenusa. Después compárala con 48 m.',
+  sol:'d = √(30² + 40²) = √(900 + 1600) = √2500 = 50 m. Como 50 > 48, <b>no llega: le faltan 2 m</b>.',
+  ph:[NUM({q:'Fase 1 · Distancia del dron al objetivo',fields:[{l:'d',a:50,u:'m',ej:'50'}]}),
+      MCQ({q:'Fase 2 · ¿Le alcanza la señal?',opts:[{t:'Sí, le sobran 2 m'},{t:'Sí, le sobran 8 m'},{t:'No, le faltan 2 m',ok:true},{t:'No, le faltan 8 m'}]})]},
+
+ {m:3,t:'La torre del último nivel',fig:'r15',
+  ctx:'¡Jefe final! Para escapar de la torre debes lanzar una tirolesa desde la cima hasta un punto en el suelo a 8 m de la base. A la misma hora, un poste de 2 m proyecta una sombra de 1.5 m y la torre proyecta una sombra de 4.5 m.',
+  hint:'Fase 1: 2 / 1.5 = h / 4.5. Fase 2: los catetos son h y 8. Fase 3: la torre y el suelo forman 90°.',
+  sol:'h = 4.5 × 2 ÷ 1.5 = <b>6 m</b> · L = √(6² + 8²) = √100 = <b>10 m</b> · β = 180° − 90° − 37° = <b>53°</b>',
+  ph:[NUM({q:'Fase 1 (Tales) · Altura de la torre',fields:[{l:'h',a:6,u:'m',ej:'6'}]}),
+      NUM({q:'Fase 2 (Pitágoras) · Longitud de la tirolesa',fields:[{l:'L',a:10,u:'m',ej:'10'}]}),
+      NUM({q:'Fase 3 (Ángulos) · La tirolesa forma 37° con el suelo. ¿Qué ángulo β forma con la torre?',fields:[{l:'β',a:53,u:'°',ej:'53'}]})]}
+];
+const WORLD_END=[3,8,13];
+
+/* ---------- estado ---------- */
+let S=null;
+function fresh(name,group){return{name,group,idx:0,phase:0,hearts:3,falls:0,startedAt:Date.now(),finishedAt:null,
+  recs:RETOS.map(()=>({done:false,pts:0,wrongTotal:0,wrongRun:0,hintRun:false,hintsTotal:0,replay:false}))};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.recs&&s.recs.length===RETOS.length)return s;}catch(e){}return null;}
+function clearSave(){try{localStorage.removeItem(KEY);}catch(e){}}
+const totalXP=()=>S.recs.reduce((a,r)=>a+r.pts,0);
+const app=document.getElementById('app');
+
+function toast(msg,ms=2200){const t=document.getElementById('toast');t.innerHTML=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),ms);}
+function modal(html,btn,cb,cancel){const m=document.getElementById('modal');document.getElementById('modalc').innerHTML=html+`<div class="row" style="justify-content:center">${cancel?`<button class="btn sec" id="mNo">${cancel}</button>`:''}<button class="btn" id="mOk">${btn}</button></div>`;m.classList.add('show');document.getElementById('mOk').onclick=()=>{m.classList.remove('show');cb&&cb();};const n=document.getElementById('mNo');if(n)n.onclick=()=>m.classList.remove('show');}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- pantalla de inicio ---------- */
+function home(){
+  const saved=load();
+  app.innerHTML=`
+  <h1 class="px">GEO QUEST</h1>
+  <p class="sub">Repaso Parcial 3 · Matemáticas V · Ángulos internos, Teorema de Tales y Teorema de Pitágoras</p>
+  <div class="card">
+    <div class="px" style="font-size:12px;color:var(--c)">MAPA DE MUNDOS</div>
+    <div class="worlds">${MUNDOS.map((w,i)=>`<div class="world" style="--wc:${w.c}"><b>${w.n}</b><span>${w.tema} · ${i<3?(i===0?4:5):1} reto${i===3?'':'s'}</span></div>`).join('')}</div>
+    <div class="px" style="font-size:12px;color:var(--c);margin-top:14px">REGLAS</div>
+    <ul class="rules">
+      <li><b>Sin calculadora.</b> Todos los resultados salen exactos; usa papel y lápiz.</li>
+      <li>Cada reto vale hasta <b>100 XP</b>. Cada error resta 30 XP y una pista resta 20 XP.</li>
+      <li>Tienes <b>3 ❤️</b>. Cada respuesta incorrecta quita un corazón.</li>
+      <li>Si te quedas sin corazones, <b>regresas 2 retos</b> y se recargan tus corazones. Los retos que repitas valen la mitad.</li>
+      <li>Al terminar cada mundo se recargan tus corazones.</li>
+      <li>En respuestas numéricas escribe solo el número con punto decimal, por ejemplo <b>7.5</b>.</li>
+      <li>Al final descargas una <b>imagen PNG</b> con tu resultado para entregarla.</li>
+    </ul>
+  </div>
+  ${saved&&!saved.finishedAt?`<div class="card"><b>Tienes una partida guardada</b> de ${esc(saved.name)} en el reto ${saved.idx+1}.<div class="row"><button class="btn go" id="bCont">Continuar</button><button class="btn sec" id="bNew">Empezar de nuevo</button></div></div>`:''}
+  <div class="card" id="startCard" ${saved&&!saved.finishedAt?'style="display:none"':''}>
+    <label class="f" for="nm">Nombre completo</label><input class="t" id="nm" autocomplete="name" placeholder="Nombre(s) y apellidos">
+    <label class="f" for="gp">Grupo</label><input class="t" id="gp" placeholder="ej. 501">
+    <div class="row"><button class="btn" id="bStart">▶ Iniciar misión</button></div>
+    <div class="small" id="startErr" style="color:var(--r);margin-top:8px"></div>
+  </div>`;
+  if(saved&&!saved.finishedAt){
+    document.getElementById('bCont').onclick=()=>{S=saved;play();};
+    document.getElementById('bNew').onclick=()=>{clearSave();document.getElementById('startCard').style.display='';document.getElementById('bCont').closest('.card').remove();};
+  }
+  document.getElementById('bStart').onclick=()=>{
+    const n=document.getElementById('nm').value.trim().replace(/\s+/g,' '), g=document.getElementById('gp').value.trim();
+    if(n.split(' ').length<2){document.getElementById('startErr').textContent='Escribe tu nombre completo (nombre y apellido).';return;}
+    if(!g){document.getElementById('startErr').textContent='Escribe tu grupo.';return;}
+    S=fresh(n,g);save();play();
+  };
+}
+
+/* ---------- juego ---------- */
+let curPhases=[];
+function hud(){
+  const r=RETOS[S.idx];
+  return `<div class="hud"><div class="hudtop">
+    <span class="hearts" aria-label="${S.hearts} corazones">${[0,1,2].map(i=>`<span class="heart ${i<S.hearts?'':'off'}">❤️</span>`).join('')}</span>
+    <span class="px lvl">RETO ${S.idx+1}/15</span><span class="px xp">${totalXP()} XP</span></div>
+    <div class="nodes">${RETOS.map((x,i)=>`<span class="node ${S.recs[i].done?'done':''} ${i===S.idx?'cur':''}" style="--nc:${MUNDOS[x.m].c}" title="Reto ${i+1}"></span>`).join('')}</div></div>`;
+}
+function play(){
+  curPhases.forEach(p=>p.stop&&p.stop());
+  if(S.finishedAt){finish();return;}
+  const r=RETOS[S.idx], w=MUNDOS[r.m], rec=S.recs[S.idx];
+  app.innerHTML=hud()+`
+  <div class="card" id="rcard">
+    <span class="tag px" style="--wc:${w.c}">${w.n.toUpperCase()} · ${w.tema}</span>
+    <h2 class="rt px">${S.idx+1}. ${r.t}</h2>
+    ${rec.replay?'<div class="small" style="color:var(--y)">↺ Reto repetido: vale la mitad.</div>':''}
+    <p class="ctx">${r.ctx}</p>
+    ${r.fig?FIG[r.fig]():''}
+    <div id="phases"></div>
+    <div class="hint ${rec.hintRun?'show':''}" id="hint">💡 ${r.hint}</div>
+    <div class="fb" id="fb"></div>
+    <div class="row" id="ctrl"><button class="btn" id="bCheck">Comprobar</button><button class="btn sec" id="bHint" ${rec.hintRun?'disabled':''}>💡 Pista (−20 XP)</button></div>
+  </div>`;
+  window.scrollTo({top:0});
+  const box=document.getElementById('phases');
+  curPhases=r.ph;
+  for(let k=0;k<=S.phase && k<r.ph.length;k++){ mountPhase(box,k,k<S.phase); }
+  document.getElementById('bCheck').onclick=onCheck;
+  document.getElementById('bHint').onclick=()=>{ if(rec.hintRun)return; rec.hintRun=true; rec.hintsTotal++; save();
+    document.getElementById('hint').classList.add('show'); document.getElementById('bHint').disabled=true; };
+}
+function mountPhase(box,k,locked){
+  const ph=RETOS[S.idx].ph[k];
+  const d=el(`<div class="phase ${locked?'locked':''}" id="ph${k}">${ph.q?`<p class="q">${ph.q}${locked?' <span class="ok-badge">✓</span>':''}</p>`:''}<div class="phbody"></div></div>`).firstChild;
+  box.appendChild(d);
+  if(locked){ d.querySelector('.phbody').innerHTML='<div class="small ok-badge">Fase superada</div>'; return; }
+  ph.mount(d.querySelector('.phbody'),{timeout:(restart)=>{ wrong('⏱️ ¡Se acabó el tiempo!',restart); }});
+}
+function fb(cls,html){const f=document.getElementById('fb');f.className='fb show '+cls;f.innerHTML=html;}
+function onCheck(){
+  const r=RETOS[S.idx], ph=r.ph[S.phase], res=ph.read();
+  if(res.err){fb('info',res.err);return;}
+  if(ph.check(res.v)){
+    ph.stop&&ph.stop();
+    if(S.phase<r.ph.length-1){
+      S.phase++; save();
+      const cur=document.getElementById('ph'+(S.phase-1)); cur.classList.add('locked');
+      const q=cur.querySelector('.q'); if(q)q.innerHTML+=' <span class="ok-badge">✓</span>';
+      fb('ok','✓ ¡Correcto! Sigue con la siguiente fase.');
+      mountPhase(document.getElementById('phases'),S.phase,false);
+      document.getElementById('ph'+S.phase).scrollIntoView({behavior:'smooth',block:'center'});
+    } else complete();
+  } else {
+    ph.reset&&ph.reset();
+    wrong('✗ No es correcto.');
+  }
+}
+function wrong(msg,after){
+  const rec=S.recs[S.idx]; rec.wrongRun++; rec.wrongTotal++; S.hearts--; save();
+  const card=document.getElementById('rcard'); card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+  document.querySelector('.hearts').innerHTML=[0,1,2].map(i=>`<span class="heart ${i<S.hearts?'':'off'}">❤️</span>`).join('');
+  if(S.hearts<=0){ curPhases.forEach(p=>p.stop&&p.stop()); fall(); return; }
+  fb('no',`${msg} Pierdes un corazón. Te quedan <b>${S.hearts}</b>. Revisa tu procedimiento e inténtalo de nuevo.`);
+  after&&after();
+}
+function fall(){
+  const from=S.idx, to=Math.max(0,S.idx-2);
+  S.falls++;
+  for(let j=to;j<from;j++){const r=S.recs[j];r.done=false;r.pts=0;r.replay=true;}
+  const rc=S.recs[from]; rc.replay = rc.replay || from>to; // el reto actual también se repetirá
+  S.recs.forEach((r,j)=>{ if(j>=to&&j<=from){ r.wrongRun=0; r.hintRun=false; } });
+  S.idx=to; S.phase=0; S.hearts=3; save();
+  modal(`<div class="px big">GAME OVER</div><p>Te quedaste sin corazones.</p><p>${from===to?'Vuelves a empezar este reto':'Regresas al <b>reto '+(to+1)+'</b>'} con 3 ❤️. Los retos que repitas valen la mitad.</p>`,'Continuar',play);
+}
+function complete(){
+  const r=RETOS[S.idx], rec=S.recs[S.idx];
+  let pts=Math.max(MIN_PTS, BASE-PEN_WRONG*rec.wrongRun-(rec.hintRun?PEN_HINT:0));
+  if(rec.replay)pts=Math.round(pts/2);
+  rec.pts=pts; rec.done=true;
+  const wasEnd=WORLD_END.includes(S.idx), last=S.idx===RETOS.length-1;
+  if(wasEnd)S.hearts=3;
+  save();
+  fb('ok',`<b>✓ ¡Correcto! +${pts} XP</b><br>${r.sol}`);
+  document.querySelectorAll('#phases .phase').forEach(p=>p.classList.add('locked'));
+  const ctrl=document.getElementById('ctrl');
+  ctrl.innerHTML=`<button class="btn go" id="bNext">${last?'🏆 Ver resultado':'Siguiente reto ▶'}</button>`;
+  document.querySelector('.px.xp').textContent=totalXP()+' XP';
+  document.getElementById('bNext').onclick=()=>{
+    if(last){S.finishedAt=Date.now();save();finish();return;}
+    S.idx++; S.phase=0; S.recs[S.idx].wrongRun=0; S.recs[S.idx].hintRun=false; save();
+    if(wasEnd) toast(`🏁 ¡${MUNDOS[r.m].n} completado! Corazones recargados ❤️❤️❤️`);
+    play();
+  };
+  document.getElementById('bNext').focus();
+}
+
+/* ---------- resultado y PNG ---------- */
+function grade(){return Math.round(totalXP()/1500*100)/10;}
+function dur(){const s=Math.round((S.finishedAt-S.startedAt)/1000);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),ss=s%60;return (h?h+' h ':'')+m+' min '+ss+' s';}
+function finish(){
+  const errs=S.recs.reduce((a,r)=>a+r.wrongTotal,0), hints=S.recs.reduce((a,r)=>a+r.hintsTotal,0);
+  app.innerHTML=`
+  <h1 class="px">¡MISIÓN CUMPLIDA!</h1>
+  <div class="card" style="text-align:center">
+    <div class="small">${esc(S.name)} · Grupo ${esc(S.group)}</div>
+    <div class="px big" style="margin:10px 0">${grade().toFixed(1)}</div>
+    <div>${totalXP()} / 1500 XP · Caídas: ${S.falls} · Errores: ${errs} · Pistas: ${hints}</div>
+  </div>
+  <div class="card">
+    <b>Paso final:</b> descarga tu imagen y entrégala donde indique tu profesor.
+    <div class="row"><button class="btn go" id="bPng">⬇ Descargar PNG</button><button class="btn sec" id="bAgain">Jugar otra vez (práctica)</button></div>
+    <div class="small" style="margin-top:8px">En celular, si no se descarga, mantén presionada la imagen y elige “Guardar imagen”.</div>
+    <img class="prev" id="prev" alt="Resultado en imagen">
+  </div>
+  <div class="card"><table class="res"><tr><th>#</th><th>Reto</th><th>Errores</th><th>Pista</th><th class="n">XP</th></tr>
+  ${RETOS.map((r,i)=>{const c=S.recs[i];return `<tr><td>${i+1}</td><td>${r.t}${c.replay?' ↺':''}</td><td>${c.wrongTotal}</td><td>${c.hintsTotal?'Sí':'—'}</td><td class="n">${c.pts}</td></tr>`;}).join('')}
+  </table></div>`;
+  window.scrollTo({top:0});
+  makePNG().then(({url,blobUrl})=>{
+    document.getElementById('prev').src=url;
+    document.getElementById('bPng').onclick=()=>{const a=document.createElement('a');a.href=blobUrl;a.download=`GeoQuest_P3_${S.name.replace(/[^\wÁÉÍÓÚÑáéíóúñ]+/g,'_')}.png`;document.body.appendChild(a);a.click();a.remove();};
+  });
+  document.getElementById('bAgain').onclick=()=>{ modal('<p><b>¿Jugar otra vez?</b></p><p>Primero descarga tu PNG: al reiniciar se borra este resultado.</p>','Sí, reiniciar',()=>{clearSave();S=null;home();},'Cancelar'); };
+}
+async function makePNG(){
+  try{await document.fonts.ready;}catch(e){}
+  const W=1000,H=1520,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+  const F=(w,s)=>`${w} ${s}px Nunito, Arial, sans-serif`, PX=s=>`${s}px "Press Start 2P", monospace`;
+  c.fillStyle='#121829';c.fillRect(0,0,W,H);
+  c.fillStyle='#1d2540';c.fillRect(0,0,W,190);
+  MUNDOS.forEach((m,i)=>{c.fillStyle=m.c;c.fillRect(i*W/4,184,W/4,8);});
+  c.fillStyle='#ffd23f';c.font=PX(40);c.fillText('GEO QUEST',50,85);
+  c.fillStyle='#eef1ff';c.font=F(700,24);c.fillText('Repaso Parcial 3 · Matemáticas V',50,130);
+  c.fillStyle='#a9b1d6';c.font=F(400,20);c.fillText('Ángulos internos · Teorema de Tales · Teorema de Pitágoras',50,162);
+  const fin=new Date(S.finishedAt);
+  c.fillStyle='#eef1ff';c.font=F(900,30);c.fillText(S.name,50,250);
+  c.font=F(400,22);c.fillStyle='#a9b1d6';
+  c.fillText(`Grupo ${S.group}   ·   ${fin.toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})} ${fin.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}   ·   Duración: ${dur()}`,50,286);
+  // tarjeta calificación
+  c.fillStyle='#1d2540';c.fillRect(50,320,900,170);c.strokeStyle='#3a4570';c.lineWidth=3;c.strokeRect(50,320,900,170);
+  c.fillStyle='#a9b1d6';c.font=F(700,20);c.fillText('CALIFICACIÓN',80,360);
+  c.fillStyle='#ffd23f';c.font=PX(56);c.fillText(grade().toFixed(1),80,450);
+  const errs=S.recs.reduce((a,r)=>a+r.wrongTotal,0), hints=S.recs.reduce((a,r)=>a+r.hintsTotal,0);
+  const st=[['XP',`${totalXP()} / 1500`],['Caídas',S.falls],['Errores',errs],['Pistas',hints]];
+  const sx=[400,610,735,850];st.forEach((s,i)=>{const x=sx[i];c.fillStyle='#a9b1d6';c.font=F(700,18);c.fillText(s[0],x,375);c.fillStyle='#eef1ff';c.font=F(900,i===0?26:34);c.fillText(String(s[1]),x,425);});
+  // tabla
+  let y=545;c.font=F(900,19);c.fillStyle='#4cc9f0';
+  c.fillText('#',60,y);c.fillText('Reto',105,y);c.fillText('Tema',520,y);c.fillText('Errores',720,y);c.fillText('Pista',820,y);c.fillText('XP',905,y);
+  y+=14;c.fillStyle='#3a4570';c.fillRect(50,y,900,2);
+  RETOS.forEach((r,i)=>{const rc=S.recs[i];y+=55;
+    if(i%2===0){c.fillStyle='#182041';c.fillRect(50,y-36,900,55);}
+    c.fillStyle=MUNDOS[r.m].c;c.fillRect(50,y-36,6,55);
+    c.fillStyle='#eef1ff';c.font=F(700,20);c.fillText(String(i+1),64,y);c.fillText(r.t+(rc.replay?'  ↺':''),105,y);
+    c.fillStyle='#a9b1d6';c.font=F(400,18);c.fillText(MUNDOS[r.m].tema,520,y);
+    c.fillStyle=rc.wrongTotal?'#ff5d73':'#3ddc97';c.font=F(900,20);c.fillText(String(rc.wrongTotal),745,y);
+    c.fillStyle='#eef1ff';c.font=F(400,20);c.fillText(rc.hintsTotal?'Sí':'—',830,y);
+    c.font=F(900,20);c.textAlign='right';c.fillText(String(rc.pts),945,y);c.textAlign='left';
+  });
+  c.fillStyle='#a9b1d6';c.font=F(400,17);
+  c.fillText('↺ = reto repetido tras quedarse sin corazones (vale la mitad).  Calificación = XP ÷ 150.',50,H-55);
+  c.fillText('Preparatoria Xochicalco · Matemáticas V · Prof. T. Huerta',50,H-28);
+  const url=cv.toDataURL('image/png');
+  const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+  return {url, blobUrl: blob?URL.createObjectURL(blob):url};
+}
+
+/* ---------- arranque ---------- */
+(function(){ const s=load(); if(s&&s.finishedAt){S=s;finish();} else home(); })();
+</script>
+</body>
+</html>
