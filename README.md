@@ -26,6 +26,8 @@ Tipos de estímulo: respuesta numérica, arrastrar a casillas, verdadero/falso c
 
 El progreso se guarda en el navegador del alumno; si recarga la página, puede continuar.
 
+**Clave docente:** [docente/GeoQuest_Clave_Docente.pdf](docente/GeoQuest_Clave_Docente.pdf)
+
 ## Fundamento didáctico
 
 La actividad aplica elementos de diseño de juegos (puntos, vidas, niveles, retroalimentación inmediata) a un contexto no lúdico (Deterding et al., 2011; Kapp, 2012). Cada respuesta recibe retroalimentación inmediata con el procedimiento correcto, lo que orienta al alumno sobre su desempeño y el siguiente paso (Hattie & Timperley, 2007).
